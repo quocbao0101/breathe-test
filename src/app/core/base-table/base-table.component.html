@@ -1,0 +1,93 @@
+<nz-table
+  #table
+  nzHideOnSinglePage
+  nzShowSizeChanger
+  [nzLoading]="loading"
+  [nzData]="rows"
+  [nzPageIndex]="page"
+  [nzPageSize]="pageSize"
+  [nzTotal]="totalRows"
+  [nzFrontPagination]="clientPagination"
+  [nzShowPagination]="clientPagination"
+  (nzPageIndexChange)="pageIndexChange.emit($event)"
+  (nzPageSizeChange)="pageSizeChange.emit($event)"
+  [nzLoadingIndicator]="loadingTmpl"
+  [nzPageSizeOptions]="[5, 10, 15, 20, 25, 30]"
+  [nzScroll]="{ y: rows.length > 7 ? '500px' : '' }"
+>
+  <thead>
+    <tr>
+      <th
+        *ngFor="let column of columns"
+        [nzShowSort]="column.sortable"
+        [nzSortOrder]="column.sortOrder"
+        [nzSortFn]="column.sortFn"
+        (nzSortOrderChange)="
+          column.sortChange.emit({ key: column.key, order: $event })
+        "
+        [nzShowFilter]="column.filterable"
+        [nzFilterMultiple]="true"
+        [nzFilters]="column.listOfFilter"
+        [nzFilterFn]="column.filterFn"
+        [nzWidth]="column.width"
+      >
+        <ng-container *ngIf="column.tplHeader">
+          <ng-container
+            *ngTemplateOutlet="column.tplHeader.template"
+          ></ng-container>
+        </ng-container>
+        <ng-container *ngIf="!column.tplHeader">
+          {{ column.header }}
+        </ng-container>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of table.data">
+      <td *ngFor="let column of columns" [nzBreakWord]="column.hasBreakWord">
+        <ng-container *ngIf="column.tplCell">
+          <ng-container
+            *ngTemplateOutlet="
+              column.tplCell.template;
+              context: { $implicit: data }
+            "
+          ></ng-container>
+        </ng-container>
+        <ng-container *ngIf="!column.tplCell">
+          <ng-container [ngSwitch]="column.dataType">
+            <ng-container *ngSwitchCase="COL_DATA_TYPE.DATE">
+              {{ data[column.key] ?? '--/--' | date : 'MM/dd/yyyy' }}
+            </ng-container>
+            <ng-container *ngSwitchCase="COL_DATA_TYPE.CURRENCY">
+              {{ data[column.key] ?? '--/--' | currency : 'VND' }}
+            </ng-container>
+            <ng-container *ngSwitchDefault>
+              {{ data[column.key] ?? '--/--' }}
+            </ng-container>
+          </ng-container>
+        </ng-container>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<div class="pagination-wrapper">
+  <nz-pagination
+    nzShowSizeChanger 
+    [nzPageIndex]="page"
+    [nzTotal]="totalRows"
+    [nzPageSize]="pageSize"
+    [nzShowTotal]="rangeTemplate"
+    (nzPageIndexChange)="pageIndexChange.emit($event)"
+    (nzPageSizeChange)="pageSizeChange.emit($event)"
+    [nzPageSizeOptions]="[5, 10, 15, 20, 25, 30]"
+  ></nz-pagination>
+  <ng-template #rangeTemplate let-range="range" let-total>
+    {{ range[0] }}-{{ range[1] }} trong tổng số {{ total }} kết quả
+  </ng-template>
+</div>
+<ng-template #loadingTmpl>
+  <div>
+    <nz-spin nzSimple></nz-spin>
+  </div>
+</ng-template>

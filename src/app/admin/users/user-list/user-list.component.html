@@ -1,0 +1,104 @@
+<t-pest-page-header
+  [title]="'users.users' | translate"
+  [breadcrumb]="breadcrumb"
+/>
+
+<div class="search-form__wrapper">
+  <div nz-row [nzGutter]="24">
+    <div nz-col nzSpan="18">
+      <form nz-form [formGroup]="searchUsersForm">
+        <div nz-row [nzGutter]="24">
+          <div
+            nz-col
+            *ngFor="let item of uiInfoFormData"
+            [nzSpan]="item.inputSpan ?? 8"
+          >
+            <t-pest-base-input-control
+              [control]="$any(searchUsersForm.get(item.controlName))"
+              [validators]="item.validators"
+              [label]="item.label"
+              [formType]="item.formType"
+              [options]="item.options"
+              [isRequired]="item.isRequired"
+              [size]="item.size"
+              [placeholder]="item.placeholder"
+              [isDelayed]="item.isDelayed"
+              (delayedInput)="item.handleDelayedInput($event)"
+              (inputChange)="item.inputChange($event)"
+              [type]="item.type ?? 'text'"
+            />
+          </div>
+        </div>
+        <ng-template #suffixIconSearch>
+          <span nz-icon nzType="search"></span>
+        </ng-template>
+      </form>
+    </div>
+    <div nz-col nzSpan="6" nz class="btn-col">
+      <button nz-button nzType="primary" (click)="handleAddUser()">
+        {{ 'users.add-user' | translate }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="list-wrapper">
+  @if (users$ | async; as users) {
+    <ng-container>
+      <t-pest-base-table
+        [rows]="users?.data?.content ?? []"
+        [page]="users?.page ?? 1"
+        [pageSize]="users?.data?.size ?? 1"
+        [totalRows]="users?.data?.totalElements ?? 0"
+        [clientPagination]="false"
+        (pageIndexChange)="handlePageChange($event)"
+        (pageSizeChange)="handleSizeChange($event)"
+        [loading]="users?.isPending ?? false"
+      >
+        <t-pest-column
+          [header]="'users.form-label-name' | translate"
+          key="fullName"
+        ></t-pest-column>
+        <t-pest-column
+          [header]="'users.phone' | translate"
+          key="phone"
+        >
+        </t-pest-column>
+        <t-pest-column
+          [header]="'users.role' | translate"
+          key="role"
+        >
+          <ng-template tPestCell let-data>
+            {{ data.role.description }}
+          </ng-template>
+        </t-pest-column>
+        <t-pest-column [header]="'users.status' | translate" key="active">
+          <ng-template tPestCell let-data>
+            @if (data.status) {
+              <nz-tag [nzColor]="'green'">{{
+                'tenant.active-text' | translate
+              }}</nz-tag>
+            } @else {
+              <nz-tag [nzColor]="'default'">{{
+                'tenant.inactive-text' | translate
+              }}</nz-tag>
+            }
+          </ng-template>
+        </t-pest-column>
+        <t-pest-column [header]="'global.actions' | translate">
+          <ng-template tPestCell let-data>
+            <a class="table-action" [routerLink]="['/admin', 'users', 'detail', data.userId]">
+              <span
+                nz-icon
+                nzType="eye"
+                nzTheme="outline"
+                nz-tooltip
+                [nzTooltipTitle]="'tenant.view-tenant' | translate"
+              ></span>
+            </a>
+          </ng-template>
+        </t-pest-column>
+      </t-pest-base-table>
+    </ng-container>
+  }
+</div>

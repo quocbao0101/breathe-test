@@ -1,0 +1,71 @@
+<div nz-row class="h-full">
+  <div nz-col nzFlex="3" class="flex justify-center items-center">
+    <div nz-col nzSpan="12">
+      <form
+        nz-form
+        [formGroup]="forgotForm"
+        (ngSubmit)="submitForm()"
+      >
+        <div nz-row nz-typography nzJustify="center" class="text-5xl text-blue-700 font-medium mb-4">
+          {{ 'auth.forgot-password' | translate }}
+        </div>
+        <div nz-row nz-typography nzJustify="center" class="text-center text-lg mb-4">
+          {{ 'auth.contentForgotPassword' | translate }}
+        </div>
+        <t-pest-base-input-control
+          type="text"
+          [label]="'auth.email' | translate"
+          [control]="$any(forgotForm.get('email'))"
+          [validators]="forgotFormValidator.email"
+          size="large"
+        />
+        <button
+          nz-button
+          [nzType]="'primary'"
+          nzSize="large"
+          nzBlock
+          [nzLoading]="loading"
+          type="submit"
+        >
+          {{ 'auth.sent' | translate }}
+        </button>
+        <div nz-row nzJustify="center" class="font-medium mt-9">
+          <a [routerLink]="['/login']">{{ 'auth.backLogin' | translate }}</a>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div  nz-col nzFlex="2" class="h-full overflow-hidden flex justify-center items-center">
+    <div class="absolute">
+      <img [src]="'/assets/images/logoWhite.png'" alt="123" />
+    </div>
+    <div class="w-full h-full">
+      <img
+        class="w-full h-full"
+        [src]="'/assets/images/banner-logo.png'"
+        alt="123"
+      />
+    </div>
+  </div>
+  <nz-modal nzCloseIcon="false" nzCentered [(nzVisible)]="isVisible" nzWrapClassName="modal-footer-forgot">
+    <div *nzModalContent class="modal-content-forgot">
+      <img
+        [src]="'/assets/images/icons/mail.png'"
+        alt=""
+      />
+      <div class="mt-5">{{ 'auth.confirmEmailTextTitle' | translate }}</div>
+      <div class="font-medium mb-4">{{ emailModal }}</div>
+      <div>{{ 'auth.confirmEmailTextContent' | translate }}<a> {{ 'global.here' | translate }}</a></div>
+    </div>
+    <div *nzModalFooter class="modal-footer-forgot">
+      <button
+        nz-button
+        [nzType]="'primary'"
+        nzSize="large"
+        (click)="handleOk()"
+      >
+        {{ 'global.continue' | translate }}
+      </button>
+    </div>
+  </nz-modal>
+</div>

@@ -1,0 +1,93 @@
+<nz-layout>
+  <nz-sider
+    nzCollapsible
+    [(nzCollapsed)]="isCollapsed"
+    [nzWidth]="240"
+    [nzCollapsedWidth]="64"
+    [nzTrigger]="null"
+  >
+    <div class="wrapper">
+      <div class="wrapper-collapsed">
+        <div class="wrapper-btn-collapsed">
+          <span
+            class="trigger"
+            nz-icon
+            [nzType]="isCollapsed ? 'menu' : 'close'"
+            (click)="toggleSider()"
+          ></span>
+        </div>
+      </div>
+      <t-pest-menu [isCollapsed]="isCollapsed" />
+    </div>
+  </nz-sider>
+  <nz-layout class="content-wrapper">
+    <nz-header class="top-header">
+      <div class="logo-header">
+        <img alt="img" src="/assets/images/tPestLogo.png" />
+      </div>
+      <div class="info-header">
+        <div class="info-notification">
+          <img
+            alt="img"
+            class="icon-notification"
+            src="/assets/images/icons/bell.svg"
+          />
+        </div>
+        <ng-container *ngIf="user$ | async as user">
+          <button
+            nz-button
+            nz-dropdown
+            [nzDropdownMenu]="menu"
+            nzPlacement="bottomCenter"
+            (mouseenter)="isHovered = true"
+            (mouseleave)="isHovered = false"
+            class="info-user"
+          >
+            <img
+              class="icon-user"
+              [src]="'/assets/images/avatar-default.png'"
+              width="50px"
+              height="50px"
+              alt="img"
+            />
+            <div class="info">
+              <p>{{ user.name }}</p>
+            </div>
+            <span
+              nz-icon
+              [nzType]="isHovered ? 'caret-up' : 'caret-down'"
+              nzTheme="outline"
+              class="icon-caret"
+            ></span>
+          </button>
+          <nz-dropdown-menu #menu="nzDropdownMenu">
+            <ul class="info-dropDown" nz-menu>
+              <li nz-menu-item>
+                <a [routerLink]="['/', 'admin', 'profile']">{{
+                  'header.your-profile' | translate
+                }}</a>
+              </li>
+              <li nz-menu-item>
+                <a [routerLink]="['/', 'admin', 'changePass']">{{
+                  'header.change-pass' | translate
+                }}</a>
+              </li>
+              <div class="line-border"></div>
+              <li class="btn-login" nz-menu-item>
+                <a [routerLink]="" (click)="logout()">{{
+                  'header.logout' | translate
+                }}</a>
+              </li>
+            </ul>
+          </nz-dropdown-menu>
+        </ng-container>
+      </div>
+    </nz-header>
+    <nz-content>
+      <router-outlet></router-outlet>
+      <div *ngIf="isShowingRouteLoadIndicator" class="loading-wrapper">
+        <nz-spin nzSimple></nz-spin>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>

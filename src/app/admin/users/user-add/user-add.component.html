@@ -1,0 +1,31 @@
+<t-pest-page-header
+  [title]="'users.users' | translate"
+  [breadcrumb]="breadcrumb"
+  [rightContent]="headerRightContentTmp"
+/>
+<ng-template #headerRightContentTmp>
+  <button nz-button nzType="primary" (click)="handleSave()" [nzLoading]="isLoadingSubmit">Thêm</button>
+</ng-template>
+
+<b nz-typography>Thông tin tài khoản</b>
+<form nz-form [formGroup]="infoUserForm">
+  <div nz-row [nzGutter]="16">
+    <div *ngFor="let item of uiInfoFormData" class="gutter-row" nz-col [nzSpan]="item.inputSpan ?? 24">
+      <t-pest-base-input-control
+        [labelSpan]="item.labelSpan"
+        (inputChange)="item.inputChange($event)"
+        [control]="$any(infoUserForm.get(item.controlName))"
+        placeholder=""
+        [validators]="item.validators"
+        [label]="item.label"
+        [formType]="item.formType"
+        [options]="item.options"
+        [isRequired]="item.isRequired"
+        [size]="item.size"
+        [placeholder]="item.placeholder"
+        [loading]="false"
+        [type]="item.type === 'password' ? 'password' : 'text'"
+      />
+    </div>
+  </div>
+</form>

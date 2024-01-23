@@ -1,0 +1,100 @@
+<nz-form-item>
+  <nz-form-label
+    class="label-input"
+    *ngIf="label && label !== ''"
+    [nzSpan]="labelSpan ?? 24"
+    >
+    <span style="font-weight: 500;" nz-typography>{{ label }}</span>
+    <span *ngIf="isRequired" class="span-required">&nbsp;*</span></nz-form-label
+  >
+  <nz-form-control [nzErrorTip]="userErrorTpl" [nzSpan]="span ?? 24">
+    <nz-input-group
+      [nzPrefixIcon]="prefixIcon"
+      [nzSuffix]="type === 'search' ? suffixIconSearch : suffix"
+      [nzSize]="size ?? 'default'"
+      class="base-input-box"
+    >
+      <ng-container *ngIf="loading; else inputTemplate">
+        <nz-skeleton-element
+          nzType="input"
+          [nzActive]="true"
+          [nzSize]="'default'"
+        ></nz-skeleton-element>
+      </ng-container>
+      <ng-template #inputTemplate>
+        <ng-container [ngSwitch]="formType">
+          <ng-container *ngSwitchCase="formInputType.radio">
+            <nz-radio-group [formControl]="control" [nzSize]="size ?? 'large'">
+              <ng-container *ngFor="let item of options">
+                <label nz-radio [nzValue]="item.value">{{ item.label }}</label>
+              </ng-container>
+            </nz-radio-group>
+          </ng-container>
+          <ng-container *ngSwitchCase="formInputType.textArea">
+            <textarea
+              [formControl]="control"
+              [rows]="textAreaRows"
+              nz-input
+              [placeholder]="placeholder"
+              (onChange)="handleInputChange($event)"
+              aria-label="Descriptive label for the textarea"
+            ></textarea>
+          </ng-container>
+          <ng-container *ngSwitchCase="formInputType.select">
+            <nz-select
+              nzAllowClear
+              [formControl]="control"
+              [nzPlaceHolder]="placeholder ?? ''"
+              [nzSize]="size ?? 'large'"
+              (ngModelChange)="handleInputChange($event)"
+            >
+              <nz-option
+                *ngFor="let item of options"
+                [nzValue]="item.value"
+                [nzLabel]="item.label"
+              />
+            </nz-select>
+          </ng-container>
+          <ng-container *ngSwitchDefault>
+            <ng-container *ngIf="isDelayed; else normalInput">
+              <input
+                [type]="type"
+                nz-input
+                [formControl]="control"
+                [placeholder]="placeholder"
+                [nzSize]="size ?? 'large'"
+                (onChange)="handleInputChange($event)"
+                tPestDelayedInput
+                (delayedInput)="delayInputChange($event)"
+                [delayTime]="baseDelayedInputTime"
+                aria-label="Descriptive label for the input"
+              />
+            </ng-container>
+            <ng-template #normalInput>
+              <input
+                class="rounded"
+                [type]="type"
+                nz-input
+                [formControl]="control"
+                [placeholder]="placeholder"
+                [nzSize]="size ?? 'large'"
+                (onChange)="handleInputChange($event)"
+                aria-label="Descriptive label for the input"
+              />
+            </ng-template>
+          </ng-container>
+        </ng-container>
+      </ng-template>
+    </nz-input-group>
+    <ng-template #userErrorTpl let-controlTpl>
+      <ng-container *ngFor="let item of validators">
+        <ng-container *ngIf="controlTpl.hasError(item.type)"
+          >{{ item.message }}
+        </ng-container>
+      </ng-container>
+    </ng-template>
+    <ng-template #suffixIconSearch>
+      <span nz-icon nzType="search"></span>
+    </ng-template>
+  </nz-form-control>
+</nz-form-item>

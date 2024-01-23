@@ -1,0 +1,11 @@
+version: '3.9'
+services:
+    t-pest-service:
+        logging:
+            options:
+                max-size: 5m
+        image: 't-pest-admin-fe:latest'
+        container_name: t-pest-admin-fe
+        restart: always
+        ports:
+            - '8082:80'

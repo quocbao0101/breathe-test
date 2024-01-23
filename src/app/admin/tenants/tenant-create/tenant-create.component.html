@@ -1,0 +1,27 @@
+<t-pest-page-header
+  [title]="'tenant.add-tenant' | translate"
+  [breadcrumb]="breadcrumb"
+  [rightContent]="headerRightContentTmp"
+/>
+<ng-template #headerRightContentTmp>
+  <button nz-button nzType="default" (click)="handleBack()">{{'global.back' | translate}}</button>
+  <button nz-button nzType="primary" (click)="handleSave()" [nzLoading]="isLoadingSubmit">{{'global.save' | translate}}</button>
+</ng-template>
+<form nz-form [formGroup]="infoTenantForm">
+  <div nz-row [nzGutter]="16">
+  <div *ngFor="let item of uiInfoFormData" class="gutter-row" nz-col [nzSpan]="item.inputSpan ?? 24">
+    <t-pest-base-input-control
+      [control]="$any(infoTenantForm.get(item.controlName))"
+      placeholder=""
+      [validators]="item.validators"
+      [label]="item.label"
+      [formType]="item.formType"
+      [options]="item.options"
+      [isRequired]="item.isRequired"
+      [size]="item.size"
+      [placeholder]="item.placeholder"
+      [loading]="false"
+    />
+  </div>
+  </div>
+</form>

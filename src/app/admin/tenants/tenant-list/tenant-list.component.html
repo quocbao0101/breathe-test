@@ -1,0 +1,100 @@
+<t-pest-page-header
+  [title]="'tenant.tenant' | translate"
+  [breadcrumb]="breadcrumb"
+/>
+<div class="search-form__wrapper">
+  <div nz-row [nzGutter]="24">
+    <div nz-col nzSpan="18">
+      <form nz-form [formGroup]="searchTenantsForm">
+        <div nz-row [nzGutter]="24">
+          <div
+            nz-col
+            *ngFor="let item of uiInfoFormData"
+            [nzSpan]="item.inputSpan ?? 8"
+          >
+            <t-pest-base-input-control
+              [control]="$any(searchTenantsForm.get(item.controlName))"
+              [validators]="item.validators"
+              [label]="item.label"
+              [formType]="item.formType"
+              [options]="item.options"
+              [isRequired]="item.isRequired"
+              [size]="item.size"
+              [placeholder]="item.placeholder"
+              [isDelayed]="item.isDelayed"
+              (delayedInput)="item.handleDelayedInput($event)"
+              (inputChange)="item.inputChange($event)"
+              [type]="item.type ?? 'text'"
+            />
+          </div>
+        </div>
+        <ng-template #suffixIconSearch>
+          <span nz-icon nzType="search"></span>
+        </ng-template>
+      </form>
+    </div>
+    <div nz-col nzSpan="6" class="btn-col">
+      <button nz-button nzType="primary" (click)="handleAddTenant()">
+        {{ 'tenant.add-tenant' | translate }}
+      </button>
+    </div>
+  </div>
+</div>
+<div class="list-wrapper">
+  <ng-container *ngIf="tenants$ | async as tenants">
+    <t-pest-base-table
+      [rows]="tenants?.data?.content ?? []"
+      [page]="tenants?.page ?? 1"
+      [pageSize]="tenants?.data?.size ?? 10"
+      [totalRows]="tenants?.data?.totalElements ?? 0"
+      [clientPagination]="false"
+      (pageIndexChange)="handlePageChange($event)"
+      (pageSizeChange)="handleSizeChange($event)"
+      [loading]="tenants?.isPending ?? false"
+    >
+      <t-pest-column
+        [header]="'tenant.tenant-name' | translate"
+        key="tenantName"
+      ></t-pest-column>
+      <t-pest-column
+        [header]="'tenant.display-name' | translate"
+        key="displayName"
+      >
+      </t-pest-column>
+      <t-pest-column
+        [header]="'tenant.description' | translate"
+        key="description"
+      ></t-pest-column>
+      <t-pest-column
+        [header]="'tenant.created-at' | translate"
+        key="createdAt"
+        [dataType]="COL_DATA_TYPE.DATE"
+      ></t-pest-column>
+      <t-pest-column [header]="'tenant.status' | translate" key="active">
+        <ng-template tPestCell let-data>
+          <nz-tag [nzColor]="'green'" *ngIf="data.active; else inactiveTempl">{{
+            'tenant.active-text' | translate
+          }}</nz-tag>
+          <ng-template #inactiveTempl>
+            <nz-tag [nzColor]="'default'">{{
+              'tenant.inactive-text' | translate
+            }}</nz-tag>
+          </ng-template>
+        </ng-template>
+      </t-pest-column>
+      <t-pest-column [header]="'global.actions' | translate">
+        <ng-template tPestCell let-data>
+          <a class="table-action" [routerLink]="['/admin', 'tenants', 'detail', data.id]">
+            <span
+              nz-icon
+              nzType="eye"
+              nzTheme="outline"
+              nz-tooltip
+              [nzTooltipTitle]="'tenant.view-tenant' | translate"
+            ></span>
+          </a>
+        </ng-template>
+      </t-pest-column>
+    </t-pest-base-table>
+  </ng-container>
+</div>

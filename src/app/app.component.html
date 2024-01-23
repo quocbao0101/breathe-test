@@ -1,0 +1,8 @@
+<ng-container *ngIf="loading; else content">
+    <div class="loadingWrapper">
+        <nz-spin nzSimple></nz-spin>
+      </div>
+</ng-container>
+<ng-template #content>
+    <router-outlet></router-outlet>
+</ng-template>

@@ -1,0 +1,63 @@
+stages:
+  - remove-old-docker-image
+  - build-docker-image
+  - deploy
+
+remove-old-docker-image:
+  stage: remove-old-docker-image
+  variables:
+    PASS: "123456"
+    SSH: "t-pest-server-1@192.168.195.93"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+  script:
+    - |
+      if [ "$CI_COMMIT_BRANCH" == "develop" ]; then
+        if [ "$(docker ps -a | grep -c t-pest-admin-fe)" -gt 0 ]; then
+          docker stop t-pest-admin-fe;
+          docker rm -f t-pest-admin-fe;
+          docker rmi -f t-pest-admin-fe:latest ;
+        fi ;
+      else
+       sshpass -p $PASS ssh -o StrictHostKeyChecking=no $SSH " if [ "$(docker ps -a | grep -c t-pest-admin-fe)" -gt 0 ]; then docker stop t-pest-admin-fe; docker rm -f t-pest-admin-fe; docker rmi -f t-pest-admin-fe:latest; fi" ; 
+      fi
+
+build-docker-image:
+  stage: build-docker-image
+  variables:
+    SERVER: "192.168.195.93"
+    PROFILE: "dev"
+    PASS: "123456"
+    SSH: "t-pest-server-1@192.168.195.93"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+  script:
+    - echo $CI_COMMIT_BRANCH
+    - echo $SERVER
+    - echo $PROFILE
+    - |
+      if [ "$CI_COMMIT_BRANCH" == "develop" ]; then
+        docker build -t t-pest-admin-fe:latest . ;
+      else
+        sshpass -p $PASS ssh -o StrictHostKeyChecking=no $SSH "cd t-pest-admin-fe/t-pest-management-system; git pull";
+        sshpass -p $PASS ssh -o StrictHostKeyChecking=no $SSH "cd t-pest-admin-fe/t-pest-management-system; docker build -t t-pest-admin-fe:latest .";
+      fi
+
+deploy:
+  stage: deploy
+  variables:
+    PROFILE: "dev"
+    PASS: "123456"
+    SSH: "t-pest-server-1@192.168.195.93"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+  script:
+    - |
+      if [ "$CI_COMMIT_BRANCH" == "develop" ]; then
+        sed -i "s|dev|$PROFILE|gI" docker-compose.yml;
+        docker compose up -d --no-color --wait;
+      else
+        sshpass -p $PASS ssh $SSH " cd t-pest-admin-fe/t-pest-management-system; sed -i 's|dev|$PROFILE|gI' docker-compose.yml";
+        sshpass -p $PASS ssh $SSH " cd t-pest-admin-fe/t-pest-management-system; docker compose up -d --no-color --wait ";
+        sshpass -p $PASS ssh $SSH " cd t-pest-admin-fe/t-pest-management-system; sed -i 's|$PROFILE|dev|gI' docker-compose.yml" ;
+      fi

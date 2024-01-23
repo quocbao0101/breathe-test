@@ -1,0 +1,23 @@
+<nz-breadcrumb nzSeparator="≫">
+  @for (item of breadcrumb.list; track $index) {
+  <nz-breadcrumb-item>
+    <a [routerLink]="[item.link]">{{ item.text }}</a>
+  </nz-breadcrumb-item>
+  }
+  <nz-breadcrumb-item>{{ breadcrumb.active }}</nz-breadcrumb-item>
+</nz-breadcrumb>
+<div nz-row class="content-wrapper">
+  <div nz-col class="left-col">
+    @if (isString(title)) {
+      <h1 nz-typography>{{title}}</h1>
+    }
+    @else {
+      <ng-container *ngTemplateOutlet="$any(title)"></ng-container>
+    }
+  </div>
+  @if (rightContent) {
+  <div nz-col>
+    <ng-container *ngTemplateOutlet="rightContent"></ng-container>
+  </div>
+  }
+</div>

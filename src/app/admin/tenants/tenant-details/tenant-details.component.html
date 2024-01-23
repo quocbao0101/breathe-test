@@ -1,0 +1,54 @@
+<t-pest-page-header
+  [title]="titleTmp"
+  [breadcrumb]="breadcrumb"
+  [rightContent]="headerRightContentTmp"
+/>
+<ng-template #titleTmp>
+  <h1 nz-typography>{{'tenant.tenant-info' | translate}}</h1>
+  @if (tenant.result$ | async; as result) {
+    @if (result.isSuccess) {
+      @if (result.data.active) {
+        <nz-tag [nzColor]="'green'">{{
+          'tenant.active-text' | translate
+        }}</nz-tag>
+      }
+      @else {
+        <nz-tag [nzColor]="'default'">{{
+          'tenant.inactive-text' | translate
+        }}</nz-tag>
+      }
+    }
+  }
+</ng-template>
+<ng-template #headerRightContentTmp>
+  <button nz-button nzType="default" (click)="handleBack()">{{'global.back' | translate}}</button>
+  @if (tenant.result$ | async; as result) {
+    @if (result.isSuccess) {
+      @if (result.data.active) {
+        <a nz-button nzType="default" nzType="default" nzDanger (click)="handleToggleStatus()" [nzLoading]="isLoadingToggleStatus">{{'tenant.inactive-text' | translate}}</a>
+      }
+      @else {
+        <button nz-button nzType="primary" nzGhost (click)="handleToggleStatus()" [nzLoading]="isLoadingToggleStatus">{{'tenant.active' | translate}}</button>
+      }
+    }
+  }
+  <button nz-button nzType="primary" (click)="handleSave()" [nzLoading]="isLoadingSubmit">{{'global.save' | translate}}</button>
+</ng-template>
+<form nz-form [formGroup]="infoTenantForm">
+  <div nz-row [nzGutter]="16">
+  <div *ngFor="let item of uiInfoFormData" class="gutter-row" nz-col [nzSpan]="item.inputSpan ?? 24">
+    <t-pest-base-input-control
+      [control]="$any(infoTenantForm.get(item.controlName))"
+      placeholder=""
+      [validators]="item.validators"
+      [label]="item.label"
+      [formType]="item.formType"
+      [options]="item.options"
+      [isRequired]="item.isRequired"
+      [size]="item.size"
+      [placeholder]="item.placeholder"
+      [loading]="isLoadingData"
+    />
+  </div>
+  </div>
+</form>

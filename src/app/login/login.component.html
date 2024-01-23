@@ -1,0 +1,133 @@
+<div nz-row class="h-full">
+  <div nz-col nzFlex="3" class="flex items-center justify-center">
+    <div nz-col nzSpan="12">
+      <form
+        nz-form
+        [formGroup]="loginForm"
+        class="login-form"
+        (ngSubmit)="submitForm()"
+      >
+        <p nz-typography class="text-center text-5xl font-medium text-blue-700">{{ 'auth.log-in' | translate }}</p>
+        <t-pest-base-input-control
+          type="text"
+          [label]="'auth.email' | translate"
+          [control]="$any(loginForm.get('username'))"
+          [validators]="loginFormValidator.username"
+          size="large"
+        />
+        <t-pest-base-input-control
+          [label]="'auth.password' | translate"
+          [suffix]="suffixTemplate"
+          [type]="passwordVisible ? 'text' : 'password'"
+          [control]="$any(loginForm.get('password'))"
+          [validators]="loginFormValidator.password"
+          size="large"
+        />
+        <ng-template #suffixTemplate>
+          <span
+            nz-icon
+            [nzType]="!passwordVisible ? 'eye-invisible' : 'eye'"
+            (click)="passwordVisible = !passwordVisible"
+          ></span>
+        </ng-template>
+        <div nz-row class="mb-4 text-blue-700">
+          <div nz-col [nzSpan]="12">
+            <span nz-typography>Don't have an account?</span>
+            <a nz-typography routerLink="/register">Sign Up</a>
+          </div>
+          <div nz-col [nzSpan]="12">
+            <a href="/forgot" class="float-right text-sm">{{
+              'auth.forgot-password' | translate
+            }}</a>
+          </div>
+        </div>
+        <button
+          nz-button
+          nzType="primary"
+          nzSize="large"
+          nzBlock
+          [nzLoading]="loading"
+          type="submit"
+        >
+          {{ 'auth.log-in' | translate }}
+        </button>
+        <nz-divider></nz-divider>
+      </form>
+      <button
+        nz-button
+        nzType="primary"
+        nzSize="large"
+        class="btn-google"
+        nzBlock
+        (click)="loginGoogle()"
+        type="submit"
+      >
+        <div nz-row>
+          <img
+            alt="img"
+            class="icon-notification"
+            height="24"
+            width="24"
+            src="../../assets/images/search.png"
+          />
+          <div nz-col nzSpan="22" nzJustify="center"><span>Login with Google</span></div>
+        </div>
+      </button>
+      <button
+        style="margin-top: 24px;"
+        nz-button
+        nzType="primary"
+        nzSize="large"
+        class="btn-facebook"
+        nzBlock
+        (click)="loginFacebook()"
+        type="submit"
+      >
+        <div nz-row>
+          <img
+            alt="img"
+            class="icon-notification"
+            height="24"
+            width="24"
+            src="../../assets/images/search.png"
+          />
+          <div nz-col nzSpan="22" nzJustify="center"><span>Login with Facebook</span></div>
+        </div>
+      </button>
+      <button
+        style="margin-top: 24px;"
+        nz-button
+        nzType="primary"
+        nzSize="large"
+        class="btn-apple"
+        nzBlock
+        (click)="loginApple()"
+        type="submit"
+      >
+        <div nz-row>
+          <img
+            alt="img"
+            class="icon-notification"
+            height="24"
+            width="24"
+            src="../../assets/images/search.png"
+          />
+          <div nz-col nzSpan="22" nzJustify="center"><span>Login with Apple</span></div>
+        </div>
+      </button>
+    </div>
+  </div>
+  <div  nz-col nzFlex="2" class="h-full overflow-hidden flex justify-center items-center">
+    <div class="absolute">
+      <img nz-image [src]="'/assets/images/logoWhite.png'" alt="123" />
+    </div>
+    <div class="w-full h-full">
+      <img
+        class="w-full h-full"
+        nz-image
+        [src]="'/assets/images/banner-logo.png'"
+        alt="123"
+      />
+    </div>
+  </div>
+</div>

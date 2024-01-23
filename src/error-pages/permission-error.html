@@ -1,0 +1,111 @@
+<title>Not Permission Page</title>
+<div id="notpermission">
+  <div class="notpermission">
+    <div class="notpermission-401">
+      <h1>4<span>0</span>1</h1>
+    </div>
+    <p>You cannot access this action at this time. Please check it again.</p>
+    <a onclick="goBack()" style="cursor: pointer">Go back</a>
+    <a href="/login" style="cursor: pointer">Go Login Page</a>
+  </div>
+</div>
+
+<script>
+  function goBack() {
+    window.history.back();
+  }
+</script>
+
+<style>
+  * {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
+  body {
+    padding: 0;
+    margin: 0;
+  }
+
+  #notpermission {
+    position: relative;
+    height: 100vh;
+    background-color: #222;
+  }
+
+  #notpermission .notpermission {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
+
+  .notpermission {
+    max-width: 460px;
+    width: 100%;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  .notpermission .notpermission-401 {
+    height: 158px;
+    line-height: 153px;
+    margin-bottom: 100px;
+  }
+
+  .notpermission .notpermission-401 h1 {
+    font-family: "Josefin Sans", sans-serif;
+    color: #222;
+    font-size: 220px;
+    letter-spacing: 10px;
+    margin: 0px;
+    font-weight: 700;
+    text-shadow: 2px 2px 0px #c9c9c9, -2px -2px 0px #c9c9c9;
+  }
+
+  .notpermission .notpermission-401 h1 > span {
+    text-shadow: 2px 2px 0px #ffab00, -2px -2px 0px #ffab00, 0px 0px 8px #ff8700;
+  }
+
+  .notpermission p {
+    font-family: "Josefin Sans", sans-serif;
+    color: #c9c9c9;
+    font-size: 16px;
+    font-weight: 400;
+    margin-top: 0px;
+    margin-bottom: 15px;
+  }
+
+  .notpermission a {
+    font-family: "Josefin Sans", sans-serif;
+    font-size: 14px;
+    text-decoration: none;
+    text-transform: uppercase;
+    background: transparent;
+    color: #c9c9c9;
+    border: 2px solid #c9c9c9;
+    display: inline-block;
+    padding: 10px 25px;
+    font-weight: 700;
+    -webkit-transition: 0.2s all;
+    transition: 0.2s all;
+  }
+
+  .notpermission a:hover {
+    color: #ffab00;
+    border-color: #ffab00;
+  }
+
+  @media only screen and (max-width: 480px) {
+    .notpermission .notpermission-401 {
+      height: 122px;
+      line-height: 122px;
+    }
+
+    .notpermission .notpermission-401 h1 {
+      font-size: 122px;
+    }
+  }
+</style>
